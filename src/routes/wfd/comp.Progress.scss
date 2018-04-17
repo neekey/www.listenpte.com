@@ -1,0 +1,20 @@
+.container {
+  width: 100%;
+  height: 20px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background: #eee;
+}
+
+.known {
+  background: #21ba45;
+  float: left;
+  height: 100%;
+}
+
+.unknown {
+  background: #f2711c;
+  float: left;
+  height: 100%;
+}

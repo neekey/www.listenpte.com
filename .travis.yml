@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+- node
+branches:
+  only:
+  - master
+cache:
+  directories:
+  - node_modules
+script:
+  - npm install
+  - make build
+deploy:
+  skip_cleanup: true
+  provider: s3
+  local_dir: dist
+  bucket: "english-number.com"
+  region: ap-southeast-2

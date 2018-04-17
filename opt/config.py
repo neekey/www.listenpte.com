@@ -1,0 +1,8 @@
+import os
+ADDRESS_FILE_NAME = 'address.json'
+NUMBERS_FILE_NAME = 'numbers.json'
+DATE_FILE_NAME = 'date.json'
+PHONE_NUMBERS_FILE_NAME = 'phone_numbers.json'
+AWS_ACCESS_KEY_ID = 'AKIAJSR2OXVJB45U34IA'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_REGION_NAME = 'us-west-1'

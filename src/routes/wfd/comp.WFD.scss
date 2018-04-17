@@ -1,0 +1,42 @@
+.container {
+  padding-top: 20vh;
+}
+
+.numberVoice {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.success-content {
+  padding-top: 100px;
+}
+
+.sentence {
+  padding: 10px;
+  color: #999;
+  background: #eee;
+  display: inline-block;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.success-icon {
+  width: 100px;
+}
+
+.result-text {
+  margin-bottom: 20px;
+}
+
+.test-result-container {
+  font-size: 20px;
+  max-width: 270px;
+  margin: auto;
+  text-align: left;
+}
+
+@media (max-height: 900px) {
+  .container {
+    padding-top: 20px;
+  }
+}
