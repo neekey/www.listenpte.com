@@ -1,5 +1,5 @@
 {
-  "name": "english-name-app",
+  "name": "listenpte",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/neekey/english-name-app.git"
+    "url": "git+https://github.com/neekey/www.listenpte.com.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/neekey/english-name-app/issues"
+    "url": "https://github.com/neekey/www.listenpte.com/issues"
   },
-  "homepage": "https://github.com/neekey/english-name-app#readme",
+  "homepage": "https://github.com/neekey/www.listenpte.com#readme",
   "dependencies": {
     "classnames": "^2.2.5",
     "css-loader": "^0.28.4",
