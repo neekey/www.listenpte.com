@@ -11,6 +11,7 @@ script:
 - npm install
 - make build
 deploy:
+  skip_cleanup: true
   provider: s3
   access_key_id: AKIAIQE4AOX2KLSELCKA
   secret_access_key:
