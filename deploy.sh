@@ -9,7 +9,6 @@ region="ap-southeast-2"
 
 # make a copy of index.html
 cp dist/index.html dist/index."$base_sha".html
-cp dist/plans.html dist/plans."$base_sha".html
 
 
 echo "+++ Upload to S3 bucket"
