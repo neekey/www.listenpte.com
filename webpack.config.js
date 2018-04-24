@@ -1,9 +1,12 @@
 var path = require('path');
+var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 var buildPath = path.resolve(__dirname, 'dist');
 var srcPath = path.resolve(__dirname, 'src');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+var scssPath = path.resolve(srcPath);
+var autoprefixer = require('autoprefixer');
+var nodeModulePath = path.resolve(__dirname, 'node_modules');
 var IS_PRODUCTION = process.env.NODE_ENV === 'production';
-var webpack = require('webpack');
 
 var webpackConfig = {
   entry: {
@@ -11,7 +14,7 @@ var webpackConfig = {
   },
   output: {
     path: buildPath,
-    filename: '[name].[hash].js',
+    filename: process.env.NODE_ENV === 'production' ? '[name].[chunkhash].js' : '[name].js',
   },
   module: {
     rules: [
@@ -22,13 +25,21 @@ var webpackConfig = {
         include: srcPath,
       },
       {
+        test: /\.ejs$/,
+        loader: 'ejs-loader',
+      },
+      {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         use: [
           {
             loader: 'babel-loader',
             options: {
-              presets: ['es2015', 'es2016', 'react'],
+              presets: [
+                'env',
+                'react',
+                'stage-0',
+              ],
             },
           },
         ],
@@ -36,73 +47,89 @@ var webpackConfig = {
       {
         test: /\.css$/,
         use: [
-          { loader: 'style-loader'},
-          {
-            loader: 'css-loader',
-            options: {
-              minimize: true,
-            },
-          },
+          { loader: 'style-loader' },
+          { loader: 'css-loader', options: { minimize: IS_PRODUCTION } },
+          { loader: 'postcss-loader', options: { plugins: () => [autoprefixer] } },
         ],
       },
       {
         test: /\.scss$/,
         use: [
-          {loader: 'style-loader'},
+          { loader: 'style-loader' },
           {
             loader: 'css-loader',
             options: {
-              minimize: true,
+              minimize: IS_PRODUCTION,
               module: true,
               camelCase: true,
               localIdentName: '[local]-[hash:5]',
             }
           },
+          { loader: 'postcss-loader', options: { plugins: () => [autoprefixer] } },
           {
             loader: 'sass-loader',
-          },
-        ],
-      },
-      {
-        test: /\.(png|jpg|gif)$/,
-        use: [
-          {
-            loader: 'url-loader',
             options: {
-              limit: 1024*15,
+              includePaths: [scssPath, nodeModulePath],
+              data: '@import "' + path.resolve(srcPath, 'app/styles/theme.scss') + '";',
             },
           },
         ],
       },
       {
-        test: /\.(woff|svg|eot|ttf|woff2)$/,
+        test: /\.less/,
         use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader', options: { minimize: IS_PRODUCTION } },
+          { loader: 'postcss-loader', options: { plugins: () => [autoprefixer] } },
           {
-            loader: 'file-loader',
+            loader: 'less-loader',
+            options: {
+              paths: [
+                srcPath,
+                nodeModulePath,
+              ],
+            }
           },
+        ],
+      },
+      {
+        test: /\.(png|jpg|gif|woff|svg|eot|ttf|woff2)$/,
+        use: [
+          { loader: 'file-loader?name=[name]-[hash:8].[ext]' },
         ],
       },
     ],
   },
   plugins: [
+    // extract common js into one filejs
+    new webpack.optimize.CommonsChunkPlugin({
+      names: ['vendor'],
+      minChunks: function(module){
+        return module.context && module.context.indexOf("node_modules") !== -1;
+      }
+    }),
+
+    // use html-webpack-plugin to create index.html
     new HtmlWebpackPlugin({
       inject: 'body',
-      template: 'src/index.html',
+      template: 'src/index.ejs',
       filename: 'index.html',
-      chunks: ['index'],
+      chunks: ['vendor', 'index'],
+      chunksSortMode: 'dependency',
+      environment: process.env.NODE_ENV,
     }),
   ],
-  devServer: {
-    host: '0.0.0.0',
-    disableHostCheck: true,
-  },
   resolve: {
+    unsafeCache: !IS_PRODUCTION,
+    symlinks: false,  // https://github.com/webpack/webpack/issues/1866
     modules: [
       'node_modules',
       srcPath,
     ],
   },
-  devtool: 'eval',
+  devServer: {
+    disableHostCheck: true,
+  }
 };
 
 if (IS_PRODUCTION) {
@@ -121,6 +148,12 @@ if (IS_PRODUCTION) {
         comments: false,
       },
     }),
+  ]);
+} else {
+  webpackConfig.devtool = 'eval';
+  webpackConfig.plugins = webpackConfig.plugins.concat([
+    // handle errors more cleanly, recover after syntax error
+    new webpack.NoEmitOnErrorsPlugin(),
   ]);
 }
 

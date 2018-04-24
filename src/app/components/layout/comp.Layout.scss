@@ -1,0 +1,58 @@
+.layout {
+  padding-bottom: 2 * $unit;
+}
+
+.topActionBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 3 * $unit;
+  margin-bottom: 2 * $unit;
+}
+
+.topActionItem {
+  font-size: $font-size-small;
+  color: $color-primary;
+  display: flex;
+  align-items: center;
+
+  .icon {
+    width: 1.4 * $unit;
+    height: 1.4 * $unit;
+  }
+}
+
+.topLeftAction {
+  composes: topActionItem;
+  .icon {
+    margin-right: $unit;
+  }
+}
+
+.topRightAction {
+  composes: topActionItem;
+  .icon {
+    margin-left: $unit;
+
+  }
+}
+
+.titleBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 0.1 * $unit solid #ddd;
+  line-height: 4.5 * $unit;
+  margin-bottom: $unit;
+  padding-bottom: $unit;
+}
+
+.title {
+  color: black;
+  font-size: $font-size-huge;
+  margin: 0;
+}
+
+.content {
+
+}

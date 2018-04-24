@@ -1,0 +1,23 @@
+.container {
+  text-align: center;
+}
+
+.actions {
+  position: absolute;
+  bottom: 8 * $unit;
+  width: calc(100% - 32px);
+}
+
+.logo {
+  margin-top: 12 * $unit;
+  width: 95%;
+}
+
+.loginAction {
+  font-size: $font-size-normal;
+  margin-top: 3 * $unit;
+}
+
+.login {
+  color: $color-primary;
+}
