@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Layout from 'app/components/layout/comp.Layout';
 import stateProvider from 'app/utils/stateProvider';
-import history from 'app/history';
 import { List, InputItem, Button } from 'antd-mobile';
 import Block from 'app/components/layout/comp.Block';
 import style from './comp.Login.scss';
+import { login } from 'app/data/user';
 
 class Login extends React.Component {
   constructor(props) {
@@ -21,13 +21,7 @@ class Login extends React.Component {
 
   onLogin(e) {
     e.preventDefault();
-    this.props.stateAction
-      .login(this.state.email, this.state.password)
-      .then(() => {
-        this.props.stateAction.loadInitialData().then(() => {
-          history.push('/home');
-        });
-      });
+    login(this.state.email, this.state.password);
   }
 
   onEmailChange(value) {

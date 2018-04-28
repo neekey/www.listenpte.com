@@ -13,13 +13,13 @@ const rootRoute = {
   path: '/',
   component: Main,
   indexRoute: {
-    onEnter: (nextState, replace) => replace('/home'),
+    onEnter: (nextState, replace) => replace('/index'),
   },
   childRoutes: [
     ...routes,
     {
       path: '*',
-      onEnter: (nextState, replace) => replace('/home'),
+      onEnter: (nextState, replace) => replace('/index'),
     },
   ],
 };

@@ -23,6 +23,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "classnames": "^2.2.5",
     "deep-equal": "^1.0.1",
+    "firebase": "^4.13.1",
     "history": "^3.0.0",
     "howler": "^2.0.4",
     "lodash": "^4.17.4",

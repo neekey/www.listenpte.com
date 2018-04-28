@@ -1,26 +1,57 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Layout from 'app/components/layout/comp.Layout';
 import stateProvider from 'app/utils/stateProvider';
-import history from 'app/history';
-import { Button } from 'antd-mobile';
+import { List, InputItem, Button } from 'antd-mobile';
 import Block from 'app/components/layout/comp.Block';
-import logoImg from './logo.png';
+import { signUp } from 'app/data/user';
 import style from './comp.Signup.scss';
 
-class SignUp extends React.Component {
-  onGoToLogin() {
-    history.push('/login');
+class Signup extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      password: '',
+    };
+    this.onSignup = this.onSignup.bind(this);
+    this.onEmailChange = this.onEmailChange.bind(this);
+    this.onPasswordChange = this.onPasswordChange.bind(this);
   }
+
+  onSignup(e) {
+    e.preventDefault();
+    signUp(this.state.email, this.state.password);
+  }
+
+  onEmailChange(value) {
+    this.setState({
+      email: value,
+    });
+  }
+
+  onPasswordChange(value) {
+    this.setState({
+      password: value,
+    });
+  }
+
   render() {
     return (
-      <Layout>
-        <Block className={style.container}>
-          <img className={style.logo} src={logoImg} alt="logo" />
+      <Layout title="Sign Up">
+        <Block>
+          <List>
+            <InputItem
+              type="text"
+              onChange={this.onEmailChange}
+              placeholder="enter email">Email</InputItem>
+            <InputItem
+              type="password"
+              onChange={this.onPasswordChange}
+              placeholder="enter password">Password</InputItem>
+          </List>
           <div className={style.actions}>
-            <Button type="primary">Sign up</Button>
-            <div className={style.loginAction}>or <span
-              onClick={this.onGoToLogin}
-              className={style.login}>log in</span></div>
+            <Button type="primary" onClick={this.onSignup}>Signup</Button>
           </div>
         </Block>
       </Layout>
@@ -28,6 +59,9 @@ class SignUp extends React.Component {
   }
 }
 
-SignUp.propTypes = {};
+Signup.propTypes = {
+  onSignup: PropTypes.func,
+  stateAction: PropTypes.object,
+};
 
-export default stateProvider(SignUp);
+export default stateProvider(Signup);
