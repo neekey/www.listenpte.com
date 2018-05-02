@@ -4,8 +4,9 @@ import Layout from 'app/components/layout/comp.Layout';
 import stateProvider from 'app/utils/stateProvider';
 import { List, InputItem, Button } from 'antd-mobile';
 import Block from 'app/components/layout/comp.Block';
+import history from 'app/history';
+import { PATH_HOME } from 'app/config/route';
 import style from './comp.Login.scss';
-import { login } from 'app/data/user';
 
 class Login extends React.Component {
   constructor(props) {
@@ -21,7 +22,9 @@ class Login extends React.Component {
 
   onLogin(e) {
     e.preventDefault();
-    login(this.state.email, this.state.password);
+    this.props.store.actionLogin(this.state.email, this.state.password).then(() => {
+      history.push(PATH_HOME);
+    });
   }
 
   onEmailChange(value) {
@@ -61,7 +64,7 @@ class Login extends React.Component {
 
 Login.propTypes = {
   onLogin: PropTypes.func,
-  stateAction: PropTypes.object,
+  store: PropTypes.object,
 };
 
 export default stateProvider(Login);

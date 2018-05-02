@@ -2,17 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import style from './comp.Voice.scss';
 import classnames from 'classnames';
-import { playWFDVoice } from 'app/utils/playVoice';
-import { getRandomAccentIndex } from 'app/configs/voice';
+import { playVoice } from 'app/utils/playVoice';
 import { track, EVENT_TYPE_PRODUCT } from 'app/utils/eventTrack';
 
-export default class NumberVoice extends React.PureComponent {
+export default class NumberVoice extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
       playing: false,
-      accentIndex: getRandomAccentIndex(),
     };
     this.onVoiceLoaded = this.onVoiceLoaded.bind(this);
     this.onVoiceEnded = this.onVoiceEnded.bind(this);
@@ -24,22 +22,14 @@ export default class NumberVoice extends React.PureComponent {
   }
 
   componentWillReceiveProps(newProps) {
-    if (this.props.sentenceIndex !== newProps.sentenceIndex) {
+    if (this.props.audioURL !== newProps.audioURL) {
       this.setState({
         loading: true,
         playing: true,
-        accentIndex: getRandomAccentIndex(),
       }, () => {
         this.playVoice();
       });
     }
-  }
-
-  playVoice() {
-    playWFDVoice(this.props.sentenceIndex, this.state.accentIndex, {
-      onLoad: this.onVoiceLoaded,
-      onEnd: this.onVoiceEnded,
-    });
   }
 
   onVoiceLoaded() {
@@ -60,6 +50,13 @@ export default class NumberVoice extends React.PureComponent {
     track('play-voice', EVENT_TYPE_PRODUCT);
   }
 
+  playVoice() {
+    playVoice(this.props.audioURL, {
+      onLoad: this.onVoiceLoaded,
+      onEnd: this.onVoiceEnded,
+    });
+  }
+
   render() {
     return (<div
       className={classnames(style.container, this.props.className)}
@@ -73,5 +70,6 @@ export default class NumberVoice extends React.PureComponent {
 }
 
 NumberVoice.propTypes = {
-  sentenceIndex: PropTypes.number,
+  audioURL: PropTypes.string,
+  className: PropTypes.string,
 };

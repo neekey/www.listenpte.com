@@ -1,10 +1,10 @@
 import { Howl } from 'howler';
-import { getVoiceURLForWFD } from 'app/configs/voice';
 
 const VOICE_CACHE = {};
 const EMPTY_FUNC = () => null;
 
 export function playVoice(voiceURL, option = {}) {
+  console.log('play voice', voiceURL);
   const onLoad = option.onLoad || EMPTY_FUNC;
   const onEnd = option.onEnd || EMPTY_FUNC;
   let sound = VOICE_CACHE[voiceURL];
@@ -25,8 +25,4 @@ export function playVoice(voiceURL, option = {}) {
   }
 
   sound.on('end', onEnd);
-}
-
-export function playWFDVoice(sentIndex, accentIndex, options) {
-  return playVoice(getVoiceURLForWFD(sentIndex, accentIndex), options);
 }

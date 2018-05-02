@@ -8,16 +8,31 @@ export default class WFD extends React.Component {
     super(props);
     this.state = {
       showSentence: false,
+      userAnswer: '',
     };
     this.toggleSentence = this.toggleSentence.bind(this);
+    this.onUserAnswerChange = this.onUserAnswerChange.bind(this);
+    this.onKnown = this.onKnown.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
     if (newProps.sentenceIndex !== this.props.sentenceIndex) {
       this.setState({
         showSentence: false,
+        userAnswer: '',
       });
     }
+  }
+
+  onUserAnswerChange(e) {
+    console.log(e.target.value);
+    this.setState({
+      userAnswer: e.target.value,
+    });
+  }
+
+  onKnown() {
+    this.props.onKnown(this.state.userAnswer);
   }
 
   toggleSentence() {
@@ -27,9 +42,9 @@ export default class WFD extends React.Component {
   }
 
   render() {
-    const { sentenceIndex, onUnknown, onKnown, sentence } = this.props;
+    const { audioURL, onUnknown, sentence } = this.props;
     return (<div className={style.container}>
-      <Voice className={style.numberVoice} sentenceIndex={sentenceIndex} />
+      <Voice className={style.numberVoice} audioURL={audioURL} />
       <div>
         <div
           className={style.sentence}
@@ -41,8 +56,9 @@ export default class WFD extends React.Component {
       </button>
       <button
         className="ui button green"
-        onClick={onKnown}>Got it!
+        onClick={this.onKnown}>Got it!
       </button>
+      <textarea value={this.state.userAnswer} onChange={this.onUserAnswerChange} />
     </div>);
   }
 }
@@ -50,6 +66,7 @@ export default class WFD extends React.Component {
 WFD.propTypes = {
   sentenceIndex: PropTypes.number,
   sentence: PropTypes.string,
+  audioURL: PropTypes.string,
   onUnknown: PropTypes.func,
   onKnown: PropTypes.func,
 };

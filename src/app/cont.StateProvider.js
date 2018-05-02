@@ -4,19 +4,22 @@ const AppContext = React.createContext({});
 const { Provider } = AppContext;
 export const StateConsumer = AppContext.Consumer;
 import firebase from 'app/data/firebase';
-import { getUser } from 'app/data/user';
+import { login, loadUserData, addUserAnswer } from 'app/data/user';
 import { loadQuestions } from 'app/data/questions';
 
 export default class StateProvider extends React.Component {
   constructor(props) {
     super(props);
     // this is the app state
+    const stateFns = this.getStateFns();
     this.state = {
+      isLoadingUser: true,
       data: {
-        user: getUser(),
-        answers: [],
+        user: null,
+        userData: null,
         questions: [],
       },
+      ...stateFns,
     };
   }
 
@@ -24,19 +27,25 @@ export default class StateProvider extends React.Component {
     this.initUserAuth();
   }
 
-  getActions() {
-    const actions = {};
-    Object.keys(this).forEach(key => {
-      if (key.startsWith('action')) {
-        actions[]
+  getStateFns() {
+    const fns = {};
+    const proto = Object.getPrototypeOf(this);
+    Object.keys(Object.getOwnPropertyDescriptors(proto)).forEach(key => {
+      if (key.startsWith('action') || key.startsWith('select')) {
+        fns[key] = this[key].bind(this);
       }
-    })
+    });
+    return fns;
   }
 
   initUserAuth() {
     firebase.auth().onAuthStateChanged(user => {
       this.setState({
-        user,
+        isLoadingUser: false,
+        data: {
+          ...this.state.data,
+          user,
+        },
       });
     });
   }
@@ -55,6 +64,10 @@ export default class StateProvider extends React.Component {
     return this.state.data.user;
   }
 
+  selectIsLoadingUser() {
+    return this.state.isLoadingUser;
+  }
+
   selectIsUserLogin() {
     return !!this.state.data.user;
   }
@@ -65,6 +78,35 @@ export default class StateProvider extends React.Component {
 
   selectAnsers() {
     return this.state.data.answers;
+  }
+
+  selectInitialDataLoaded() {
+    const { user, userData, questions } = this.state.data;
+    return !!user && !!userData && !!questions;
+  }
+
+  actionAddUserAnswer(answer) {
+    console.log('actionAddUserAnswer', answer);
+    return addUserAnswer(answer).then(newAnswer => {
+      const userData = this.state.data.userData || {};
+      const answers = userData.answers || [];
+      this.$setState({
+        data: {
+          ...this.state.data,
+          userData: {
+            ...(this.state.data.userData || {}),
+            answers: [...answers, newAnswer],
+          },
+        },
+      });
+    });
+  }
+
+  actionLoadInitialData() {
+    return Promise.all([
+      this.actionLoadQuestions(),
+      this.actionLoadUserData(),
+    ]);
   }
 
   actionLoadQuestions() {
@@ -78,7 +120,20 @@ export default class StateProvider extends React.Component {
     });
   }
 
-  actionLoadAnsers() {}
+  actionLoadUserData() {
+    return loadUserData().then(userData => {
+      this.$setState({
+        data: {
+          ...this.state.data,
+          userData,
+        },
+      });
+    });
+  }
+
+  actionLogin(email, password) {
+    return login(email, password);
+  }
 
   render() {
     return (
