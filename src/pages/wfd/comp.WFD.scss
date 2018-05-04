@@ -1,15 +1,10 @@
 .container {
-  padding-top: 20vh;
   text-align: center;
 }
 
 .numberVoice {
   font-size: 2rem;
   margin-bottom: 10px;
-}
-
-.success-content {
-  padding-top: 100px;
 }
 
 .sentence {
@@ -19,10 +14,6 @@
   display: inline-block;
   margin-bottom: 20px;
   cursor: pointer;
-}
-
-.success-icon {
-  width: 100px;
 }
 
 .result-text {
@@ -37,6 +28,7 @@
 }
 
 .answer {
+  box-sizing: border-box;
   width: 100%;
   max-width: 450px;
   border-radius: 5px;

@@ -48,7 +48,7 @@ export default class WFD extends React.Component {
   }
 
   render() {
-    const { audioURL, onUnknown, sentence } = this.props;
+    const { audioURL, onUnknown, sentence, isSaving } = this.props;
     const { submitted, userAnswer } = this.state;
     return (<Layout title="WFD" leftAction={{ label: <Link to="/">Home</Link> }}>
       <Block className={style.container}>
@@ -70,7 +70,8 @@ export default class WFD extends React.Component {
         <div>
           {!submitted ? (
             <Button
-              type="ghost"
+              disabled={isSaving}
+              type="default"
               onClick={onUnknown}
               inline style={{ marginRight: 10 }}>
               I don't know
@@ -87,6 +88,7 @@ export default class WFD extends React.Component {
           }
           {submitted ? (
             <Button
+              disabled={isSaving}
               type="primary"
               onClick={this.onNext}
               inline>
@@ -104,6 +106,7 @@ WFD.propTypes = {
   audioURL: PropTypes.string,
   onUnknown: PropTypes.func,
   onKnown: PropTypes.func,
+  isSaving: PropTypes.bool,
 };
 
 WFD.defaultProps = {

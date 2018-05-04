@@ -4,7 +4,6 @@ const VOICE_CACHE = {};
 const EMPTY_FUNC = () => null;
 
 export function playVoice(voiceURL, option = {}) {
-  console.log('play voice', voiceURL);
   const onLoad = option.onLoad || EMPTY_FUNC;
   const onEnd = option.onEnd || EMPTY_FUNC;
   let sound = VOICE_CACHE[voiceURL];

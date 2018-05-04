@@ -10,6 +10,7 @@ class WFDContainer extends React.Component {
     this.state = {
       audioURL: this.calculateCurrentAudioURL(question),
       question,
+      isSaving: false,
     };
     this.onKnown = this.onKnown.bind(this);
     this.onUnknown = this.onUnknown.bind(this);
@@ -17,6 +18,9 @@ class WFDContainer extends React.Component {
 
   onKnown(answer) {
     const questionId = this.state.question.id;
+    this.setState({
+      isSaving: true,
+    });
     this.props.store.actionRecordUserAnswer(
       questionId,
       {
@@ -26,6 +30,7 @@ class WFDContainer extends React.Component {
     ).then(() => {
       const question = this.props.store.selectWeightedQuestions()[0];
       this.setState({
+        isSaving: false,
         question,
         audioURL: this.calculateCurrentAudioURL(question),
       });
@@ -34,11 +39,15 @@ class WFDContainer extends React.Component {
 
   onUnknown() {
     const questionId = this.state.question.id;
+    this.setState({
+      isSaving: true,
+    });
     this.props.store.actionRecordUserAnswer(
       questionId
     ).then(() => {
       const question = this.props.store.selectWeightedQuestions()[0];
       this.setState({
+        isSaving: false,
         question,
         audioURL: this.calculateCurrentAudioURL(question),
       });
@@ -54,6 +63,7 @@ class WFDContainer extends React.Component {
     const { sentence } = this.state.question;
     return (<div>
       <Wfd
+        isSaving={this.state.isSaving}
         sentence={sentence}
         audioURL={this.state.audioURL}
         onUnknown={this.onUnknown}

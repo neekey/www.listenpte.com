@@ -14,6 +14,7 @@ class Login extends React.Component {
     this.state = {
       email: '',
       password: '',
+      isLogining: false,
     };
     this.onLogin = this.onLogin.bind(this);
     this.onEmailChange = this.onEmailChange.bind(this);
@@ -22,7 +23,13 @@ class Login extends React.Component {
 
   onLogin(e) {
     e.preventDefault();
+    this.setState({
+      isLogining: true,
+    });
     this.props.store.actionLogin(this.state.email, this.state.password).then(() => {
+      this.setState({
+        isLogining: false,
+      });
       history.push(PATH_HOME);
     });
   }
@@ -54,7 +61,10 @@ class Login extends React.Component {
               placeholder="enter password">Password</InputItem>
           </List>
           <div className={style.actions}>
-            <Button type="primary" onClick={this.onLogin}>Login</Button>
+            <Button
+              disabled={this.state.isLogining}
+              type="primary"
+              onClick={this.onLogin}>Login</Button>
           </div>
         </Block>
       </Layout>
