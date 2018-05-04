@@ -1,0 +1,21 @@
+$unit: 0.625rem;
+$spaceUnit: 0.8 * $unit;
+
+$color-blue: #00B5FF;
+$color-pink: #FF66A5;
+$color-grey: #A2A2A2;
+$color-grey-light: #F6F6F6;
+$color-white: white;
+$color-black: black;
+
+$color-primary: $color-blue;
+$color-text: $color-black;
+$color-text-light: $color-grey;
+
+$font-size-small: 1.2 * $unit;
+$font-size-normal: 1.4 * $unit;
+$font-size-big: 1.8 * $unit;
+$font-size-huge: 4.2 * $unit;
+
+$page-background-color: $color-grey-light;
+$page-padding: 1.6 * $unit;

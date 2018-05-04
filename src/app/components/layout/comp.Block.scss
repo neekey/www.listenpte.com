@@ -1,0 +1,9 @@
+.block {
+  padding-left: $page-padding;
+  padding-right: $page-padding;
+
+  &.fullWidth {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
