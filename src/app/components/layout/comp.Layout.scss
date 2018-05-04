@@ -6,12 +6,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 3 * $unit;
+  height: 4 * $unit;
   margin-bottom: 2 * $unit;
 }
 
 .topActionItem {
-  font-size: $font-size-small;
+  font-size: $font-size-big;
   color: $color-primary;
   display: flex;
   align-items: center;
@@ -19,6 +19,10 @@
   .icon {
     width: 1.4 * $unit;
     height: 1.4 * $unit;
+  }
+
+  a {
+    color: $color-primary;
   }
 }
 

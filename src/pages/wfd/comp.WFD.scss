@@ -1,5 +1,6 @@
 .container {
   padding-top: 20vh;
+  text-align: center;
 }
 
 .numberVoice {
@@ -35,8 +36,11 @@
   text-align: left;
 }
 
-@media (max-height: 900px) {
-  .container {
-    padding-top: 20px;
-  }
+.answer {
+  width: 100%;
+  max-width: 450px;
+  border-radius: 5px;
+  height: 70px;
+  margin-bottom: 20px;
+  padding: 10px;
 }

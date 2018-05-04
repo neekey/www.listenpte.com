@@ -2,94 +2,62 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import stateProvider from 'app/utils/stateProvider';
 import Wfd from './comp.WFD';
-import Progress from './comp.Progress';
 
 class WFDContainer extends React.Component {
   constructor(props) {
     super(props);
-    const { untestedIndexList, currentIndex } =
-      this.calculateNextIndexAndUntestedList(
-        this.getWfdData().map((_, index) => index));
+    const question = this.props.store.selectWeightedQuestions()[0];
     this.state = {
-      untestedIndexList,
-      unknownIndexList: [],
-      knownIndexList: [],
-      testedIndexList: [],
-      currentIndex,
-      audioURL: this.calculateCurrentAudioURL(currentIndex),
+      audioURL: this.calculateCurrentAudioURL(question),
+      question,
     };
     this.onKnown = this.onKnown.bind(this);
     this.onUnknown = this.onUnknown.bind(this);
   }
 
   onKnown(answer) {
-    const currentIndex = this.state.currentIndex;
-    const wfdData = this.getWfdData();
-    const currentWFD = wfdData[currentIndex] || {};
-    this.props.store.actionAddUserAnswer({
-      questionId: currentWFD.id,
-      answer,
-    });
-
-    const newData = this.calculateNextIndexAndUntestedList(this.state.untestedIndexList);
-    this.setState({
-      currentIndex: newData.currentIndex,
-      untestedIndexList: newData.untestedIndexList,
-      knownIndexList: [...this.state.knownIndexList, currentIndex],
-      testedIndexList: [...this.state.testedIndexList, currentIndex],
-      audioURL: this.calculateCurrentAudioURL(newData.currentIndex),
+    const questionId = this.state.question.id;
+    this.props.store.actionRecordUserAnswer(
+      questionId,
+      {
+        questionId,
+        answer,
+      }
+    ).then(() => {
+      const question = this.props.store.selectWeightedQuestions()[0];
+      this.setState({
+        question,
+        audioURL: this.calculateCurrentAudioURL(question),
+      });
     });
   }
 
   onUnknown() {
-    const currentIndex = this.state.currentIndex;
-    const newData = this.calculateNextIndexAndUntestedList(this.state.untestedIndexList);
-    this.setState({
-      currentIndex: newData.currentIndex,
-      untestedIndexList: newData.untestedIndexList,
-      unknownIndexList: [...this.state.unknownIndexList, currentIndex],
-      testedIndexList: [...this.state.testedIndexList, currentIndex],
-      audioURL: this.calculateCurrentAudioURL(newData.currentIndex),
+    const questionId = this.state.question.id;
+    this.props.store.actionRecordUserAnswer(
+      questionId
+    ).then(() => {
+      const question = this.props.store.selectWeightedQuestions()[0];
+      this.setState({
+        question,
+        audioURL: this.calculateCurrentAudioURL(question),
+      });
     });
   }
 
-  getWfdData() {
-    return this.props.store.selectQuestions();
-  }
-
-  calculateCurrentAudioURL(currentIndex) {
-    const wfdData = this.getWfdData();
-    const currentWFD = wfdData[currentIndex] || {};
-    const { audioURLs } = currentWFD;
+  calculateCurrentAudioURL(question) {
+    const { audioURLs } = question;
     return audioURLs ? audioURLs[Math.floor(Math.random() * audioURLs.length)] : null;
   }
 
-  calculateNextIndexAndUntestedList(untestedIndexList) {
-    const targetIndex = Math.floor(untestedIndexList.length * Math.random());
-    const index = untestedIndexList[targetIndex];
-    const newUntestedIndexList = [...untestedIndexList];
-    newUntestedIndexList.splice(targetIndex, -1);
-    return {
-      currentIndex: index,
-      untestedIndexList: newUntestedIndexList,
-    };
-  }
-
   render() {
-    const wfdData = this.getWfdData();
-    const currentWFD = wfdData[this.state.currentIndex] || {};
-    const { sentence } = currentWFD;
+    const { sentence } = this.state.question;
     return (<div>
       <Wfd
-        sentenceIndex={this.state.currentIndex}
         sentence={sentence}
         audioURL={this.state.audioURL}
         onUnknown={this.onUnknown}
         onKnown={this.onKnown} />
-      <Progress
-        all={wfdData.length}
-        known={this.state.knownIndexList.length}
-        unknown={this.state.unknownIndexList.length} />
     </div>);
   }
 }

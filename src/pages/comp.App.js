@@ -10,6 +10,7 @@ import {
   PATH_HOME,
   pathnameMatchPath,
 } from 'app/config/route';
+import Loading from 'app/components/loading';
 
 class App extends React.Component {
   constructor(props) {
@@ -71,11 +72,7 @@ class App extends React.Component {
 
   render() {
     const props = this.props;
-    return this.isLoading() ? 'loading' : (
-      <div>
-        {props.children}
-      </div>
-    );
+    return this.isLoading() ? <Loading /> : props.children;
   }
 }
 

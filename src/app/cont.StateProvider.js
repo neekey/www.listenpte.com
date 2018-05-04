@@ -4,8 +4,10 @@ const AppContext = React.createContext({});
 const { Provider } = AppContext;
 export const StateConsumer = AppContext.Consumer;
 import firebase from 'app/data/firebase';
-import { login, loadUserData, addUserAnswer } from 'app/data/user';
+import { login, loadUserData, addUserAnswer, updateUserQuestionStats } from 'app/data/user';
 import { loadQuestions } from 'app/data/questions';
+import { getAnswerErrorCount } from 'app/utils/question';
+import shuffleArray from 'app/utils/shuffleArray';
 
 export default class StateProvider extends React.Component {
   constructor(props) {
@@ -76,8 +78,26 @@ export default class StateProvider extends React.Component {
     return this.state.data.questions;
   }
 
+  selectAnswersForQuestion(questionId) {
+    return this.state.data.userData.answers.filter(
+      item => item.questionId === questionId);
+  }
+
   selectAnsers() {
     return this.state.data.answers;
+  }
+
+  selectWeightedQuestions() {
+    const questionStats = this.state.data.userData.questionStats;
+    const questions = shuffleArray(this.state.data.questions);
+    return questions.map(question => {
+      const ret = { ...question, weight: 100 };
+      const questionStat = questionStats[question.id];
+      if (questionStat) {
+        ret.weight += (questionStat.errorCount - questionStat.count * 15);
+      }
+      return ret;
+    }).sort((a, b) => b.weight - a.weight);
   }
 
   selectInitialDataLoaded() {
@@ -85,21 +105,50 @@ export default class StateProvider extends React.Component {
     return !!user && !!userData && !!questions;
   }
 
-  actionAddUserAnswer(answer) {
-    console.log('actionAddUserAnswer', answer);
-    return addUserAnswer(answer).then(newAnswer => {
-      const userData = this.state.data.userData || {};
-      const answers = userData.answers || [];
-      this.$setState({
-        data: {
-          ...this.state.data,
-          userData: {
-            ...(this.state.data.userData || {}),
-            answers: [...answers, newAnswer],
+  actionRecordUserAnswer(questionId, answer) {
+    const stateData = this.state.data;
+    const question = stateData.questions.find(item => item.id === questionId);
+    const errorCount = answer ?
+      getAnswerErrorCount(question.sentence, answer.answer) : 0;
+    const questionStats = stateData.userData.questionStats;
+    const questionStat = questionStats[questionId] || {};
+    questionStat.count = questionStat.count ? questionStat.count++ : 1;
+    const currentErrorCount = questionStat.errorCount || 0;
+    questionStat.errorCount = currentErrorCount + errorCount;
+    const tasks = [
+      updateUserQuestionStats(questionId, questionStat).then(() => {
+        this.$setState({
+          data: {
+            ...stateData,
+            userData: {
+              ...(stateData.userData || {}),
+              questionStats: {
+                ...questionStats,
+                [questionId]: questionStat,
+              },
+            },
           },
-        },
-      });
-    });
+        });
+      }),
+    ];
+    if (answer) {
+      tasks.push(
+        addUserAnswer(answer).then(newAnswer => {
+          const userData = this.state.data.userData || {};
+          const answers = userData.answers || [];
+          this.$setState({
+            data: {
+              ...stateData,
+              userData: {
+                ...(stateData.userData || {}),
+                answers: [...answers, newAnswer],
+              },
+            },
+          });
+        })
+      );
+    }
+    return Promise.all(tasks);
   }
 
   actionLoadInitialData() {

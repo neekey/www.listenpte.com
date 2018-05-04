@@ -2,6 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Voice from './comp.Voice';
 import style from './comp.WFD.scss';
+import Layout from 'app/components/layout/comp.Layout';
+import Block from 'app/components/layout/comp.Block';
+import { Button } from 'antd-mobile';
+import Diff from 'app/components/diff';
+import { Link } from 'react-router';
 
 export default class WFD extends React.Component {
   constructor(props) {
@@ -9,62 +14,92 @@ export default class WFD extends React.Component {
     this.state = {
       showSentence: false,
       userAnswer: '',
+      submitted: false,
     };
-    this.toggleSentence = this.toggleSentence.bind(this);
     this.onUserAnswerChange = this.onUserAnswerChange.bind(this);
-    this.onKnown = this.onKnown.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onNext = this.onNext.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
-    if (newProps.sentenceIndex !== this.props.sentenceIndex) {
+    if (newProps.sentence !== this.props.sentence) {
       this.setState({
         showSentence: false,
         userAnswer: '',
+        submitted: false,
       });
     }
   }
 
   onUserAnswerChange(e) {
-    console.log(e.target.value);
     this.setState({
       userAnswer: e.target.value,
     });
   }
 
-  onKnown() {
-    this.props.onKnown(this.state.userAnswer);
+  onSubmit() {
+    this.setState({
+      submitted: true,
+    });
   }
 
-  toggleSentence() {
-    this.setState({
-      showSentence: !this.state.showSentence,
-    });
+  onNext() {
+    this.props.onKnown(this.state.userAnswer);
   }
 
   render() {
     const { audioURL, onUnknown, sentence } = this.props;
-    return (<div className={style.container}>
-      <Voice className={style.numberVoice} audioURL={audioURL} />
-      <div>
-        <div
-          className={style.sentence}
-          onClick={this.toggleSentence}>{this.state.showSentence ? sentence : 'Show Sentence'}</div>
-      </div>
-      <button
-        className="ui button orange"
-        onClick={onUnknown}>I don't know
-      </button>
-      <button
-        className="ui button green"
-        onClick={this.onKnown}>Got it!
-      </button>
-      <textarea value={this.state.userAnswer} onChange={this.onUserAnswerChange} />
-    </div>);
+    const { submitted, userAnswer } = this.state;
+    return (<Layout title="WFD" leftAction={{ label: <Link to="/">Home</Link> }}>
+      <Block className={style.container}>
+        <Voice className={style.numberVoice} audioURL={audioURL} />
+        <div>
+          <div
+            className={style.sentence}>
+            {submitted ? sentence : 'Will show answer after submission'}
+          </div>
+        </div>
+        <div>
+          <textarea
+            disabled={submitted}
+            className={style.answer}
+            value={userAnswer}
+            onChange={this.onUserAnswerChange} />
+          {submitted ? <Diff inputB={sentence} inputA={userAnswer} type="words" /> : null}
+        </div>
+        <div>
+          {!submitted ? (
+            <Button
+              type="ghost"
+              onClick={onUnknown}
+              inline style={{ marginRight: 10 }}>
+              I don't know
+            </Button>) : null
+          }
+          {!submitted ? (
+            <Button
+              type="primary"
+              disabled={!userAnswer}
+              onClick={this.onSubmit}
+              inline>
+              Submit
+            </Button>) : null
+          }
+          {submitted ? (
+            <Button
+              type="primary"
+              onClick={this.onNext}
+              inline>
+              Next
+            </Button>) : null
+          }
+        </div>
+      </Block>
+    </Layout>);
   }
 }
 
 WFD.propTypes = {
-  sentenceIndex: PropTypes.number,
   sentence: PropTypes.string,
   audioURL: PropTypes.string,
   onUnknown: PropTypes.func,
@@ -73,7 +108,6 @@ WFD.propTypes = {
 
 WFD.defaultProps = {
   sentence: '',
-  sentenceIndex: 0,
   onUnknown: () => null,
   onKnown: () => null,
 };

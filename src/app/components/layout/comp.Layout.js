@@ -63,7 +63,7 @@ export default class Layout extends React.Component {
 }
 
 const actionModel = PropTypes.shape({
-  label: PropTypes.string,
+  label: PropTypes.any,
   icon: PropTypes.string,
   onClick: PropTypes.func,
 });
