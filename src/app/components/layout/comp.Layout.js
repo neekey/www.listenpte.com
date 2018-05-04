@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from 'antd-mobile';
+import { Icon } from 'antd';
 import Block from './comp.Block';
 import style from './comp.Layout.scss';
 

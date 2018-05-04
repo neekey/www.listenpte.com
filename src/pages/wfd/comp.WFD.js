@@ -4,9 +4,10 @@ import Voice from './comp.Voice';
 import style from './comp.WFD.scss';
 import Layout from 'app/components/layout/comp.Layout';
 import Block from 'app/components/layout/comp.Block';
-import { Button } from 'antd-mobile';
+import { Button } from 'antd';
 import Diff from 'app/components/diff';
 import { Link } from 'react-router';
+import Progress from './comp.Progress';
 
 export default class WFD extends React.Component {
   constructor(props) {
@@ -48,9 +49,12 @@ export default class WFD extends React.Component {
   }
 
   render() {
-    const { audioURL, onUnknown, sentence, isSaving } = this.props;
+    const { audioURL, onUnknown, sentence, isSaving, questionId } = this.props;
     const { submitted, userAnswer } = this.state;
     return (<Layout title="WFD" leftAction={{ label: <Link to="/">Home</Link> }}>
+      <Progress
+        weightedQuestions={this.props.weightedQuestions}
+        highlightQuestionId={questionId} />
       <Block className={style.container}>
         <Voice className={style.numberVoice} audioURL={audioURL} />
         <div>
@@ -70,10 +74,10 @@ export default class WFD extends React.Component {
         <div>
           {!submitted ? (
             <Button
-              disabled={isSaving}
+              loading={isSaving}
               type="default"
               onClick={onUnknown}
-              inline style={{ marginRight: 10 }}>
+              style={{ marginRight: 10 }}>
               I don't know
             </Button>) : null
           }
@@ -81,17 +85,15 @@ export default class WFD extends React.Component {
             <Button
               type="primary"
               disabled={!userAnswer}
-              onClick={this.onSubmit}
-              inline>
+              onClick={this.onSubmit}>
               Submit
             </Button>) : null
           }
           {submitted ? (
             <Button
-              disabled={isSaving}
+              loading={isSaving}
               type="primary"
-              onClick={this.onNext}
-              inline>
+              onClick={this.onNext}>
               Next
             </Button>) : null
           }
@@ -107,10 +109,13 @@ WFD.propTypes = {
   onUnknown: PropTypes.func,
   onKnown: PropTypes.func,
   isSaving: PropTypes.bool,
+  weightedQuestions: PropTypes.array,
+  questionId: PropTypes.string,
 };
 
 WFD.defaultProps = {
   sentence: '',
   onUnknown: () => null,
   onKnown: () => null,
+  weightedQuestions: [],
 };

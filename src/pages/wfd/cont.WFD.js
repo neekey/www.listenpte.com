@@ -6,7 +6,7 @@ import Wfd from './comp.WFD';
 class WFDContainer extends React.Component {
   constructor(props) {
     super(props);
-    const question = this.props.store.selectWeightedQuestions()[0];
+    const question = this.props.store.selectWeightedSortedQuestions()[0];
     this.state = {
       audioURL: this.calculateCurrentAudioURL(question),
       question,
@@ -28,7 +28,7 @@ class WFDContainer extends React.Component {
         answer,
       }
     ).then(() => {
-      const question = this.props.store.selectWeightedQuestions()[0];
+      const question = this.props.store.selectWeightedSortedQuestions()[0];
       this.setState({
         isSaving: false,
         question,
@@ -45,7 +45,7 @@ class WFDContainer extends React.Component {
     this.props.store.actionRecordUserAnswer(
       questionId
     ).then(() => {
-      const question = this.props.store.selectWeightedQuestions()[0];
+      const question = this.props.store.selectWeightedSortedQuestions()[0];
       this.setState({
         isSaving: false,
         question,
@@ -60,9 +60,11 @@ class WFDContainer extends React.Component {
   }
 
   render() {
-    const { sentence } = this.state.question;
+    const { sentence, id } = this.state.question;
     return (<div>
       <Wfd
+        questionId={id}
+        weightedQuestions={this.props.store.selectWeightedQuestions()}
         isSaving={this.state.isSaving}
         sentence={sentence}
         audioURL={this.state.audioURL}

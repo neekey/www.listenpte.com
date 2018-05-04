@@ -87,7 +87,7 @@ export default class StateProvider extends React.Component {
     return this.state.data.answers;
   }
 
-  selectWeightedQuestions() {
+  selectWeightedSortedQuestions() {
     const questionStats = this.state.data.userData.questionStats;
     const questions = shuffleArray(this.state.data.questions);
     return questions.map(question => {
@@ -98,6 +98,19 @@ export default class StateProvider extends React.Component {
       }
       return ret;
     }).sort((a, b) => b.weight - a.weight);
+  }
+
+  selectWeightedQuestions() {
+    const questionStats = this.state.data.userData.questionStats;
+    const questions = this.state.data.questions;
+    return questions.map(question => {
+      const ret = { ...question, weight: 100 };
+      const questionStat = questionStats[question.id];
+      if (questionStat) {
+        ret.weight += (questionStat.errorCount - questionStat.count * 15);
+      }
+      return ret;
+    });
   }
 
   selectInitialDataLoaded() {
@@ -138,9 +151,9 @@ export default class StateProvider extends React.Component {
           const answers = userData.answers || [];
           this.$setState({
             data: {
-              ...stateData,
+              ...this.state.data,
               userData: {
-                ...(stateData.userData || {}),
+                ...(userData || {}),
                 answers: [...answers, newAnswer],
               },
             },

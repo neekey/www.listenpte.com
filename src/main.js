@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import StateProvider from './app/cont.StateProvider';
 import { needToLogin } from 'app/config/route';
 import history from 'app/history';
-import enUS from 'antd-mobile/lib/locale-provider/en_US';
-import { LocaleProvider } from 'antd-mobile';
+import enUS from 'antd/lib/locale-provider/en_US';
+import { LocaleProvider } from 'antd';
 import App from './pages/comp.App';
 
 export default class Main extends React.Component {

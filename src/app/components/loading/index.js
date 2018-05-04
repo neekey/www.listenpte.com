@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from 'antd-mobile';
+import { Icon } from 'antd';
 import style from './index.scss';
 
 export default function Loading(props) {

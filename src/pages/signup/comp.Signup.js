@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Layout from 'app/components/layout/comp.Layout';
 import stateProvider from 'app/utils/stateProvider';
-import { List, InputItem, Button } from 'antd-mobile';
+import { List, InputItem, Button } from 'antd';
 import Block from 'app/components/layout/comp.Block';
 import { signUp } from 'app/data/user';
 import style from './comp.Signup.scss';

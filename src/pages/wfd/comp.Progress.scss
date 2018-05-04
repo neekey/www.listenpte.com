@@ -1,20 +1,22 @@
 .container {
   width: 100%;
   height: 20px;
-  position: fixed;
-  bottom: 0;
-  left: 0;
   background: #eee;
 }
 
-.known {
-  background: #21ba45;
+.unit {
   float: left;
   height: 100%;
+  cursor: pointer;
+  &:hover {
+    transform: scale(3, 3);
+    transition: all 0.5s;
+    box-shadow: 0 0 15px #ddd;
+  }
 }
 
-.unknown {
-  background: #f2711c;
-  float: left;
-  height: 100%;
+.highlight {
+  transform: scale(3, 3);
+  transition: all 0.5s;
+  box-shadow: 0 0 15px #ddd;
 }

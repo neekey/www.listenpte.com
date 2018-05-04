@@ -22,12 +22,13 @@ export function loadUserData() {
         .doc(user.uid)
         .get()
         .then(ret => {
-          if (ret.exists) {
-            return ret.data();
-          }
-          return {
+          const defaultData = {
             questionStats: {},
           };
+          if (ret.exists) {
+            return { ...defaultData, ...ret.data() };
+          }
+          return defaultData;
         }),
     ]).then(results => (
       {

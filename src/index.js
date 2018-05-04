@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import { Router } from 'react-router';
 import history from './app/history';
 import routes from './routes';
-import 'antd-mobile/dist/antd-mobile.css';
+import 'antd/dist/antd.css';
 import './index.scss';
 import Main from './main';
 
