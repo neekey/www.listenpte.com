@@ -15,5 +15,3 @@ echo "+++ Upload to S3 bucket"
 flags="--region $region --acl public-read"
 aws s3 sync dist $bucket $flags --cache-control "public, max-age=31536000"
 aws s3api put-object --bucket listenpte.com --key index.html --cache-control "public, must-revalidate, proxy-revalidate, max-age=0" --content-type text/html --body dist/index.html
-
-done;
