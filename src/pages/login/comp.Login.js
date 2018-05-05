@@ -5,6 +5,7 @@ import stateProvider from 'app/utils/stateProvider';
 import { Input, Button, Form, Icon } from 'antd';
 import Block from 'app/components/layout/comp.Block';
 import history from 'app/history';
+import { Link } from 'react-router';
 import { PATH_HOME } from 'app/config/route';
 
 const FormItem = Form.Item;
@@ -63,12 +64,16 @@ class Login extends React.Component {
             </FormItem>
             <FormItem>
               <Button
+                style={{ marginRight: 20 }}
                 loading={this.state.isLogining}
                 type="primary"
                 htmlType="submit"
                 className="login-form-button">
                 Log in
               </Button>
+              <Link to="/signup">
+                Sign Up
+              </Link>
             </FormItem>
           </Form>
         </Block>
