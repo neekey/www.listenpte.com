@@ -125,7 +125,7 @@ export default class StateProvider extends React.Component {
       getAnswerErrorCount(question.sentence, answer.answer) : 0;
     const questionStats = stateData.userData.questionStats;
     const questionStat = questionStats[questionId] || {};
-    questionStat.count = questionStat.count ? questionStat.count++ : 1;
+    questionStat.count = questionStat.count ? ++questionStat.count : 1;
     const currentErrorCount = questionStat.errorCount || 0;
     questionStat.errorCount = currentErrorCount + errorCount;
     const tasks = [
