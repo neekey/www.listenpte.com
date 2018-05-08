@@ -1,3 +1,5 @@
+import mistakeRoute from '../mistakes/route';
+
 export default {
   path: 'wfd',
   getComponent(nextState, done) {
@@ -5,4 +7,7 @@ export default {
       done(null, require('./cont.WFD').default);
     });
   },
+  childRoutes: [
+    mistakeRoute,
+  ],
 };

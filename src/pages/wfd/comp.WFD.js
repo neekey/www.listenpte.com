@@ -51,7 +51,10 @@ export default class WFD extends React.Component {
   render() {
     const { audioURL, onUnknown, sentence, isSaving, questionId } = this.props;
     const { submitted, userAnswer } = this.state;
-    return (<Layout title="WFD" leftAction={{ label: <Link to="/">Home</Link> }}>
+    return (<Layout
+      title="WFD"
+      leftAction={{ label: <Link to="/">Home</Link> }}
+      extraContentWithTitle={<Link to="/mistakes">See my mistakes</Link>}>
       <Progress
         weightedQuestions={this.props.weightedQuestions}
         highlightQuestionId={questionId} />

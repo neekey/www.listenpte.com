@@ -6,7 +6,7 @@ export const StateConsumer = AppContext.Consumer;
 import firebase from 'app/data/firebase';
 import { login, loadUserData, addUserAnswer, updateUserQuestionStats } from 'app/data/user';
 import { loadQuestions } from 'app/data/questions';
-import { getAnswerErrorCount } from 'app/utils/question';
+import { getAnswerErrorCount, getAnswerMistakes } from 'app/utils/question';
 import shuffleArray from 'app/utils/shuffleArray';
 
 export default class StateProvider extends React.Component {
@@ -74,6 +74,10 @@ export default class StateProvider extends React.Component {
     return !!this.state.data.user;
   }
 
+  selectQuestion(questionId) {
+    return this.state.data.questions.find(item => item.id === questionId);
+  }
+
   selectQuestions() {
     return this.state.data.questions;
   }
@@ -98,6 +102,23 @@ export default class StateProvider extends React.Component {
       }
       return ret;
     }).sort((a, b) => b.weight - a.weight);
+  }
+
+  selectUserWFDMistakes() {
+    const answers = this.state.data.userData.answers;
+    const result = {};
+    answers.forEach(answer => {
+      const question = this.selectQuestion(answer.questionId);
+      const mistakes = getAnswerMistakes(question.sentence, answer.answer);
+      Object.keys(mistakes).forEach(word => {
+        if (word in result) {
+          result[word] = result[word] + mistakes[word];
+        } else {
+          result[word] = mistakes[word];
+        }
+      });
+    });
+    return result;
   }
 
   selectWeightedQuestions() {

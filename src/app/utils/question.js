@@ -12,3 +12,19 @@ export function getAnswerErrorCount(sentence, answer) {
     return count;
   }, 0);
 }
+
+export function getAnswerMistakes(sentence, answer) {
+  const mistakes = {};
+  if (sentence === answer) {
+    return mistakes;
+  }
+  const ret = diffWords(sentence, answer);
+  ret.forEach(item => {
+    const value = item.value.trim().toLowerCase();
+    if (item.removed && /^[a-zA-Z]+$/.test(value)) {
+      const count = value in mistakes ? mistakes[value] : 0;
+      mistakes[value] = count + 1;
+    }
+  });
+  return mistakes;
+}
