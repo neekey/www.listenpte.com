@@ -1,0 +1,43 @@
+.container {
+  text-align: center;
+}
+
+.numberVoice {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.alert {
+  display: inline-block;
+  margin-top: 15px;
+}
+
+.sentence {
+  padding: 10px;
+  color: #999;
+  background: #eee;
+  display: inline-block;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.result-text {
+  margin-bottom: 20px;
+}
+
+.test-result-container {
+  font-size: 20px;
+  max-width: 270px;
+  margin: auto;
+  text-align: left;
+}
+
+.answer {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 450px;
+  border-radius: 5px;
+  height: 70px;
+  margin-bottom: 20px;
+  padding: 10px;
+}

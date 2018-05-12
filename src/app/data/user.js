@@ -24,6 +24,7 @@ export function loadUserData() {
         .then(ret => {
           const defaultData = {
             questionStats: {},
+            RSQuestionStats: {},
           };
           if (ret.exists) {
             return { ...defaultData, ...ret.data() };
@@ -49,6 +50,37 @@ export function addUserAnswer(answer = {}) {
       .add(answer)
       .then(newAnswer =>
         newAnswer.get().then(ret => ret.data()));
+  }
+  return Promise.reject(null);
+}
+
+export function updateUserRSQuestionStats(questionId, stats = {}) {
+  const user = getUser();
+  if (user) {
+    return db
+      .collection('users')
+      .doc(user.uid)
+      .get()
+      .then(ret => {
+        if (ret.exists) {
+          return ret.data();
+        }
+        return {
+          RSQuestionStats: {},
+        };
+      })
+      .then(({ questionStats }) => {
+        const newStats = {
+          ...questionStats,
+          [questionId]: stats,
+        };
+        return db
+          .collection('users')
+          .doc(user.uid)
+          .set({
+            RSQuestionStats: newStats,
+          }, { merge: true });
+      });
   }
   return Promise.reject(null);
 }
