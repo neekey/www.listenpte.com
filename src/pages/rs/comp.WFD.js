@@ -54,7 +54,7 @@ export default class WFD extends React.Component {
       this.setState({
         shouldStartSpeak: true,
       });
-    }, 2000);
+    }, 3000);
   }
 
   render() {

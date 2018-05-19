@@ -2,7 +2,7 @@
 
 bucket="s3://voice.listenpte.com/wfd"
 region="ap-southeast-2"
-local_path="data"
+local_path="data/wfd"
 
 echo "+++ Upload to S3 bucket"
 flags="--region $region --acl public-read"
